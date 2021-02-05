@@ -18,5 +18,15 @@ module.exports = {
   loginFailInfo: {
     errno: 10004,
     message: '登录失败，用户名或密码错误'
+  },
+  // 删除用户失败
+  deleteUserFailInfo: {
+    errno: 10010,
+    message: '删除用户失败'
+  },
+  // 未登录
+  loginCheckFailInfo: {
+    errno: 10005,
+    message: '您尚未登录'
   }
 }

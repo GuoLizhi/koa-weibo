@@ -3,7 +3,8 @@ const {
   registerUserNameExistInfo,
   registerFailInfo,
   registerUserNameNotExistInfo,
-  loginFailInfo
+  loginFailInfo,
+  deleteUserFailInfo
 } = require('../model/error-info')
 const { ErrorModel, SuccessModel } = require('../model/response-model')
 const doCrypto = require('../utils/crypto')
@@ -54,6 +55,15 @@ class UserController {
       ctx.session.userInfo = userInfo
     }
     ctx.body = new SuccessModel({ message: '登录成功' })
+  }
+
+  // 删除一个用户
+  async deleteUser (ctx) {
+    const { userName } = ctx.request.body
+    const result = await userService.deleteUser(userName)
+    ctx.body = result
+      ? new SuccessModel({ message: '删除成功' })
+      : new ErrorModel(deleteUserFailInfo)
   }
 }
 
