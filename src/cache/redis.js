@@ -1,7 +1,8 @@
 const redis = require('redis')
-const { REDIS_CONF } = require('../conf/db')
 
-const redisClient = redis.createClient(REDIS_CONF.port, REDIS_CONF.host)
+const { DB_REDIS_PORT, DB_REDIS_HOST } = process.env
+const redisClient = redis.createClient(DB_REDIS_PORT, DB_REDIS_HOST)
+
 redisClient.on('error', err => {
   console.log(err)
 })

@@ -1,25 +1,37 @@
 const Sequelize = require('sequelize')
-const { MYSQL_CONF } = require('../conf/db')
 const { isProd, isTest } = require('../utils/env')
 
-const { database, user, password, host } = MYSQL_CONF
-const conf = {
-  host,
+const {
+  DB_MYSQL_HOST,
+  DB_MYSQL_PORT,
+  DB_MYSQL_USER,
+  DB_MYSQL_PASSWORD,
+  DB_MYSQL_DATABASE
+} = process.env
+
+const COMMON_CONF = {
+  host: DB_MYSQL_HOST,
+  port: DB_MYSQL_PORT,
   dialect: 'mysql'
 }
 
 if (isTest) {
-  conf.logging = () => {}
+  COMMON_CONF.logging = () => {}
 }
 
 if (isProd) {
-  conf.pool = {
+  COMMON_CONF.pool = {
     max: 5,
     min: 0,
     idle: 10000
   }
 }
 
-const seq = new Sequelize(database, user, password, conf)
+const seq = new Sequelize(
+  DB_MYSQL_DATABASE,
+  DB_MYSQL_USER,
+  DB_MYSQL_PASSWORD,
+  COMMON_CONF
+)
 
 module.exports = seq

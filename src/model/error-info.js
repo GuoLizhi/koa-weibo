@@ -13,5 +13,10 @@ module.exports = {
   registerUserNameNotExistInfo: {
     errno: 10003,
     message: '用户名未存在'
+  },
+  // 登录失败
+  loginFailInfo: {
+    errno: 10004,
+    message: '登录失败，用户名或密码错误'
   }
 }
