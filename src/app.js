@@ -1,4 +1,3 @@
-require('dotenv').config()
 const Koa = require('koa')
 const app = new Koa()
 const json = require('koa-json')
@@ -9,6 +8,7 @@ const path = require('path')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const users = require('./routes/users')
 
 // error handler
