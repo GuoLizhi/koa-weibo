@@ -4,7 +4,9 @@ const {
   registerFailInfo,
   registerUserNameNotExistInfo,
   loginFailInfo,
-  deleteUserFailInfo
+  deleteUserFailInfo,
+  changeInfoFailInfo,
+  changePasswordFailInfo
 } = require('../model/error-info')
 const { ErrorModel, SuccessModel } = require('../model/response-model')
 const doCrypto = require('../utils/crypto')
@@ -14,7 +16,7 @@ class UserController {
   async isUserExist (ctx) {
     const { userName } = ctx.request.body
     const result = await userService.getUserInfo({ userName })
-    return result ? new SuccessModel({}) : new ErrorModel(registerUserNameNotExistInfo)
+    ctx.body = result ? new SuccessModel({}) : new ErrorModel(registerUserNameNotExistInfo)
   }
 
   // user register
@@ -64,6 +66,49 @@ class UserController {
     ctx.body = result
       ? new SuccessModel({ message: '删除成功' })
       : new ErrorModel(deleteUserFailInfo)
+  }
+
+  // 修改用户的个人信息
+  async updateUserInfo (ctx) {
+    const { userName } = ctx.session.userInfo
+    const { nickname, avatar, city } = ctx.request.body
+    const result = await userService.updateUser({
+      newNickName: nickname,
+      newAvatar: avatar,
+      newCity: city
+    }, { userName })
+    if (result) {
+      Object.assign(ctx.session.userInfo, {
+        nickname,
+        avatar,
+        city
+      })
+      ctx.body = new SuccessModel({ message: '修改成功' })
+      return
+    }
+    ctx.body = new ErrorModel(changeInfoFailInfo)
+  }
+
+  // 修改用户的password
+  async updatePassword (ctx) {
+    const { userName, password, newPassword } = ctx.request.body
+    const result = await userService.updateUser({
+      newPassword: doCrypto(newPassword)
+    }, {
+      userName,
+      password: doCrypto(password)
+    })
+    if (result) {
+      ctx.body = new SuccessModel({ message: '修改成功' })
+      return
+    }
+    ctx.body = new SuccessModel(changePasswordFailInfo)
+  }
+
+  // 用户登出
+  async logout (ctx) {
+    delete ctx.session.userInfo
+    ctx.body = new SuccessModel({ message: '退出成功' })
   }
 }
 

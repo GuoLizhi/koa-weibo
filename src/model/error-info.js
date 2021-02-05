@@ -28,5 +28,15 @@ module.exports = {
   loginCheckFailInfo: {
     errno: 10005,
     message: '您尚未登录'
+  },
+  // 修改基本信息失败
+  changeInfoFailInfo: {
+    errno: 10008,
+    message: '修改基本信息失败'
+  },
+  // 修改密码失败
+  changePasswordFailInfo: {
+    errno: 10006,
+    message: '修改密码失败，请重试'
   }
 }
