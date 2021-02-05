@@ -3,7 +3,7 @@ const sequelize = require('sequelize')
 
 class UserRelationService {
   // 获取某个用户的粉丝列表
-  async getUserFollowers (followerId) {
+  async getUserFollowers (userId) {
     const result = await User.findAndCountAll({
       attributes: ['id', 'userName', 'nickname', 'avatar'],
       order: [
@@ -13,17 +13,19 @@ class UserRelationService {
         {
           model: UserRelation,
           where: {
-            followerId,
+            followerId: userId,
             userId: {
-              [sequelize.Op.ne]: followerId
+              [sequelize.Op.ne]: userId
             }
           }
         }
       ]
     })
+    const userList = result.rows.map(row => row.dataValues)
 
     return {
-      count: result.count
+      count: result.count,
+      userList
     }
   }
 
@@ -50,6 +52,20 @@ class UserRelationService {
     return {
       count: result.count
     }
+  }
+
+  // 添加关注关系
+  async addFollower (userId, followerId) {
+    const result = await UserRelation.create({ userId, followerId })
+    return result.dataValues
+  }
+
+  // 删除关注关系
+  async deleteFollower (userId, followerId) {
+    const result = await UserRelation.destroy({
+      where: { userId, followerId }
+    })
+    return result > 0
   }
 }
 
