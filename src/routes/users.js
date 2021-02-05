@@ -1,13 +1,8 @@
 const router = require('koa-router')()
-
+const { isUserExist, register } = require('../controller/user.controller')
 router.prefix('/users')
 
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
-})
-
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
+router.post('/isUserExist', isUserExist)
+router.post('/register', register)
 
 module.exports = router

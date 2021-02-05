@@ -13,7 +13,7 @@ class UserService {
       attributes: ['id', 'userName', 'nickName', 'avatar', 'city'],
       where: whereOpts
     })
-    return get(result, 'dataValues', {})
+    return get(result, 'dataValues')
   }
 
   // 用户注册
